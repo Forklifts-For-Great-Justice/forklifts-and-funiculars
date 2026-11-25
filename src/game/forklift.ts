@@ -4,7 +4,7 @@ import { ControlInput } from './types';
 import { CargoItem, syncCargoMesh } from './cargo';
 import { STATION_Y } from './levels';
 
-const MIN_FORK_H = 0.07;
+const MIN_FORK_H = 0.085;
 const MAX_FORK_H = 2.45;
 const MIN_TILT = -0.14; // tilt back (cradle)
 const MAX_TILT = 0.17; // tilt forward (unloading)
@@ -218,7 +218,7 @@ export class Forklift {
 
     // Hydraulic Mast + Forks (mounted at front +Z = 0.98)
     this.mastPivot = new THREE.Group();
-    this.mastPivot.position.set(0, -0.35, 0.96);
+    this.mastPivot.position.set(0, -0.47, 0.96);
     this.chassisTiltGroup.add(this.mastPivot);
 
     for (const side of [-0.38, 0.38]) {
@@ -334,7 +334,7 @@ export class Forklift {
     const fwd = this.getForward();
     return out.set(
       pos.x + fwd.x * 1.72,
-      pos.y - 0.5 + this.forkHeight,
+      pos.y - 0.49 + this.forkHeight,
       pos.z + fwd.z * 1.72,
     );
   }
@@ -426,7 +426,7 @@ export class Forklift {
         .applyAxisAngle(new THREE.Vector3(0, 1, 0), this.yaw);
 
       const targetX = forkPos.x + worldOffset.x;
-      const targetY = forkPos.y + item.halfExtents.y + 0.02;
+      const targetY = forkPos.y + item.halfExtents.y;
       const targetZ = forkPos.z + worldOffset.z;
 
       const qYaw = new THREE.Quaternion().setFromAxisAngle(
