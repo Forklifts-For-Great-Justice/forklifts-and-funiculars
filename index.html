@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Forklifts &amp; Funiculars — 3/4 Overhead Prototype</title>
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="game-canvas"></canvas>
+
+      <!-- Top Bar: Level selector & quick telemetry -->
+      <header class="hud-top">
+        <div class="brand-card">
+          <div class="brand-title">FORKLIFTS &amp; FUNICULARS</div>
+          <div class="level-tabs" id="level-tabs"></div>
+        </div>
+
+        <div class="balance-card" id="balance-card">
+          <div class="balance-header">
+            <span class="balance-label">COUNTERWEIGHT BALANCE</span>
+            <span class="balance-status ok" id="balance-status">BALANCED</span>
+          </div>
+          <div class="balance-meters">
+            <div class="car-pill car-a">
+              <span>CAR A</span>
+              <strong id="car-a-mass">0t</strong>
+              <small id="car-a-pos">LOWER</small>
+            </div>
+            <div class="diff-pill">
+              <span>DIFF</span>
+              <strong id="diff-mass">0t / 4t</strong>
+            </div>
+            <div class="car-pill car-b">
+              <span>CAR B</span>
+              <strong id="car-b-mass">0t</strong>
+              <small id="car-b-pos">UPPER</small>
+            </div>
+          </div>
+          <div class="balance-actions">
+            <button id="btn-dispatch" class="btn primary" title="Dispatch / Ride Funicular (G or Enter)">
+              ▶ Dispatch Funicular <kbd>G</kbd>
+            </button>
+            <button id="btn-overview" class="btn" title="Toggle Diorama Overview (Tab)">
+              🗺 Overview <kbd>Tab</kbd>
+            </button>
+            <button id="btn-rotate-cam" class="btn" title="Rotate Camera 90° (Z / C)">
+              ↻ Rotate <kbd>C</kbd>
+            </button>
+          </div>
+        </div>
+
+        <div class="manifest-card">
+          <div class="manifest-header">
+            <span id="level-title">Level 1</span>
+            <span class="trip-counter" id="trip-counter">Trips: 0</span>
+          </div>
+          <p class="level-subtitle" id="level-subtitle"></p>
+          <ul class="manifest-list" id="manifest-list"></ul>
+          <div class="manifest-footer">
+            <button id="btn-undo" class="btn small" title="Undo to Before Last Trip (Backspace)">↶ Undo Trip</button>
+            <button id="btn-reset" class="btn small" title="Reset Level (Shift+R)">⟳ Reset</button>
+            <button id="btn-sound" class="btn small" title="Toggle Sound (M)">🔊</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Bottom Left: Compact Forklift Telemetry & Controls -->
+      <aside class="hud-bottom-left">
+        <div class="forklift-status">
+          <div class="stat-chip">
+            <span>FORK HEIGHT</span>
+            <strong id="hud-fork-height">0.08m</strong>
+          </div>
+          <div class="stat-chip">
+            <span>TILT</span>
+            <strong id="hud-mast-tilt">0°</strong>
+          </div>
+          <div class="stat-chip" id="chip-brake">
+            <span>DECK LOCK</span>
+            <strong id="hud-brake">OFF</strong>
+          </div>
+          <div class="stat-chip" id="chip-load">
+            <span>CARRYING</span>
+            <strong id="hud-load">EMPTY</strong>
+          </div>
+        </div>
+        <div class="controls-strip" id="controls-strip">
+          <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> Drive</span>
+          <span><kbd>Shift</kbd> Crawl</span>
+          <span><kbd>R</kbd>/<kbd>F</kbd> Forks</span>
+          <span><kbd>Q</kbd>/<kbd>E</kbd> Tilt</span>
+          <span><kbd>Space</kbd> Deck Lock</span>
+          <span><kbd>G</kbd> Funicular</span>
+          <span><kbd>H</kbd> Horn</span>
+          <span><kbd>Z</kbd>/<kbd>C</kbd> Cam</span>
+          <span><kbd>Tab</kbd> Overview</span>
+        </div>
+      </aside>
+
+      <!-- Toast Notifications -->
+      <div class="toast-container" id="toast-container"></div>
+
+      <!-- Level Complete Modal -->
+      <div class="modal-backdrop hidden" id="victory-modal">
+        <div class="modal-card">
+          <div class="modal-badge">MANIFEST COMPLETE</div>
+          <h2 id="victory-title">Valley Depot Complete!</h2>
+          <p id="victory-summary"></p>
+          <div class="victory-stats" id="victory-stats"></div>
+          <div class="modal-actions">
+            <button id="btn-replay" class="btn">Replay Level</button>
+            <button id="btn-next-level" class="btn primary">Next Level ▶</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading Overlay -->
+      <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-box">
+          <h1>FORKLIFTS &amp; FUNICULARS</h1>
+          <p>Initializing Rapier3D physics &amp; alpine depot...</p>
+          <div class="loading-bar"><div class="loading-fill"></div></div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
