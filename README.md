@@ -2,7 +2,8 @@
 
 A **3/4 overhead**, 3D stylized low-poly physics logistics & delivery puzzle game built for the web with **Three.js**, **Rapier3D WASM**, **TypeScript**, and **Vite**.
 
-See [Game Design Document](docs/game_design_document.md) for full game requirements, mechanics, and roadmap.
+- **Play Live (GitHub Pages):** https://forklifts-for-great-justice.github.io/forklifts-and-funiculars/
+- **Game Design Document:** [docs/game_design_document.md](docs/game_design_document.md)
 
 ## Features Implemented (Vertical Slice)
 - **Rear-Wheel-Steer Forklift:** Smooth tight turning, precision crawl (`Shift`), hydraulic mast lift (`R`/`F`), mast tilt (`Q`/`E`), deck lock (`Space`), horn (`H`), and overhead pallet footprint & fork-pocket alignment cues.
