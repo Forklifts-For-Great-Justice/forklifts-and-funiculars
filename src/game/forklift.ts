@@ -69,16 +69,23 @@ export class Forklift {
       .setRestitution(0.0);
     this.collider = world.createCollider(colliderDesc, this.body);
 
-    // Build stylized low-poly industrial yellow forklift
+    // Build sci-fi armored forklift — dark metal body, cyan emissive accents
     this.root = new THREE.Group();
     this.chassisTiltGroup = new THREE.Group();
     this.root.add(this.chassisTiltGroup);
 
-    const yellowMat = new THREE.MeshStandardMaterial({
-      color: 0xf4b41a,
-      roughness: 0.45,
-      metalness: 0.12,
+    // Dark composite body with cyan accent
+    const bodyMat = new THREE.MeshStandardMaterial({
+      color: 0x1e2834,
+      roughness: 0.42,
+      metalness: 0.65,
       flatShading: true,
+    });
+    const cyanMat = new THREE.MeshStandardMaterial({
+      color: 0x44ccdd,
+      emissive: 0x22aacc,
+      emissiveIntensity: 0.8,
+      roughness: 0.2,
     });
     const darkSteelMat = new THREE.MeshStandardMaterial({
       color: 0x262d36,
@@ -87,23 +94,28 @@ export class Forklift {
       flatShading: true,
     });
     const tireMat = new THREE.MeshStandardMaterial({
-      color: 0x1b1e22,
+      color: 0x111418,
       roughness: 0.9,
       flatShading: true,
     });
     const hubMat = new THREE.MeshStandardMaterial({
-      color: 0xd9dee4,
+      color: 0x8899aa,
       roughness: 0.4,
       metalness: 0.5,
     });
-    const seatMat = new THREE.MeshStandardMaterial({ color: 0x3b2d23, roughness: 0.85 });
+    const seatMat = new THREE.MeshStandardMaterial({ color: 0x1a2228, roughness: 0.85 });
 
     // Lower chassis frame (local +Z is FORWARD toward the forks)
-    const bodyBase = new THREE.Mesh(new THREE.BoxGeometry(1.36, 0.52, 1.95), yellowMat);
+    const bodyBase = new THREE.Mesh(new THREE.BoxGeometry(1.36, 0.52, 1.95), bodyMat);
     bodyBase.position.set(0, -0.04, -0.1);
     bodyBase.castShadow = true;
     bodyBase.receiveShadow = true;
     this.chassisTiltGroup.add(bodyBase);
+
+    // Cyan accent strip along chassis bottom edge
+    const accentStrip = new THREE.Mesh(new THREE.BoxGeometry(1.38, 0.03, 1.97), cyanMat);
+    accentStrip.position.set(0, -0.29, -0.1);
+    this.chassisTiltGroup.add(accentStrip);
 
     // Rounded rear counterweight block
     const counterweight = new THREE.Mesh(new THREE.BoxGeometry(1.38, 0.62, 0.62), darkSteelMat);
@@ -111,7 +123,7 @@ export class Forklift {
     counterweight.castShadow = true;
     this.chassisTiltGroup.add(counterweight);
 
-    const cwCap = new THREE.Mesh(new THREE.BoxGeometry(1.32, 0.24, 0.52), yellowMat);
+    const cwCap = new THREE.Mesh(new THREE.BoxGeometry(1.32, 0.24, 0.52), bodyMat);
     cwCap.position.set(0, 0.44, -0.88);
     cwCap.castShadow = true;
     this.chassisTiltGroup.add(cwCap);
@@ -132,10 +144,10 @@ export class Forklift {
     steerWheel.rotation.x = Math.PI / 2 - 0.35;
     this.chassisTiltGroup.add(steerWheel);
 
-    // Operator (cute low-poly hardhat driver)
+    // Operator in dark tech suit
     const torso = new THREE.Mesh(
       new THREE.CylinderGeometry(0.2, 0.24, 0.48, 8),
-      new THREE.MeshStandardMaterial({ color: 0x2f6ba8, roughness: 0.7 }),
+      new THREE.MeshStandardMaterial({ color: 0x1a2840, roughness: 0.7 }),
     );
     torso.position.set(0, 0.78, -0.26);
     torso.castShadow = true;
@@ -143,7 +155,7 @@ export class Forklift {
 
     const head = new THREE.Mesh(
       new THREE.SphereGeometry(0.17, 10, 8),
-      new THREE.MeshStandardMaterial({ color: 0xf0c29e, roughness: 0.7 }),
+      new THREE.MeshStandardMaterial({ color: 0xc8a882, roughness: 0.7 }),
     );
     head.position.set(0, 1.12, -0.24);
     head.castShadow = true;
@@ -151,7 +163,7 @@ export class Forklift {
 
     const helmet = new THREE.Mesh(
       new THREE.SphereGeometry(0.19, 10, 8, 0, Math.PI * 2, 0, Math.PI * 0.58),
-      new THREE.MeshStandardMaterial({ color: 0xf7f7f7, roughness: 0.35 }),
+      new THREE.MeshStandardMaterial({ color: 0x334455, roughness: 0.35 }),
     );
     helmet.position.set(0, 1.14, -0.24);
     helmet.castShadow = true;
@@ -175,10 +187,10 @@ export class Forklift {
     roof.castShadow = true;
     this.chassisTiltGroup.add(roof);
 
-    // Amber beacon + deck-lock status lamp on roof
+    // Deck-lock status beacon on roof — cyan glow
     this.brakeLampMat = new THREE.MeshStandardMaterial({
-      color: 0xffaa22,
-      emissive: 0xaa5500,
+      color: 0x44ccdd,
+      emissive: 0x22aacc,
       emissiveIntensity: 0.9,
       roughness: 0.25,
     });
@@ -252,8 +264,8 @@ export class Forklift {
       tine.receiveShadow = true;
       this.forkCarriage.add(tine);
 
-      // Painted high-vis yellow fork tips for crisp 3/4 overhead readability!
-      const tip = new THREE.Mesh(new THREE.BoxGeometry(0.135, 0.06, 0.24), yellowMat);
+      // Neon fork tips for visibility
+      const tip = new THREE.Mesh(new THREE.BoxGeometry(0.135, 0.06, 0.24), cyanMat);
       tip.position.set(side, 0.032, 1.28);
       this.forkCarriage.add(tip);
     }
@@ -262,7 +274,7 @@ export class Forklift {
     this.alignGlowMesh = new THREE.Mesh(
       new THREE.PlaneGeometry(0.95, 1.15),
       new THREE.MeshBasicMaterial({
-        color: 0x42c97a,
+        color: 0x44ccdd,
         transparent: true,
         opacity: 0.0,
         side: THREE.DoubleSide,
@@ -278,7 +290,7 @@ export class Forklift {
     // Overhead depth aid: projected footprint reticle directly underneath lifted cargo!
     this.reticleGroup = new THREE.Group();
     this.reticleRingMat = new THREE.MeshBasicMaterial({
-      color: 0x42c97a,
+      color: 0x44ccdd,
       transparent: true,
       opacity: 0.75,
       side: THREE.DoubleSide,
@@ -309,8 +321,8 @@ export class Forklift {
 
   public toggleDeckLock(): boolean {
     this.deckLocked = !this.deckLocked;
-    this.brakeLampMat.color.setHex(this.deckLocked ? 0x42c97a : 0xffaa22);
-    this.brakeLampMat.emissive.setHex(this.deckLocked ? 0x168042 : 0xaa5500);
+    this.brakeLampMat.color.setHex(this.deckLocked ? 0x44ccdd : 0xffaa22);
+    this.brakeLampMat.emissive.setHex(this.deckLocked ? 0x22aacc : 0xaa5500);
     return this.deckLocked;
   }
 
@@ -604,7 +616,7 @@ export class Forklift {
       this.reticleGroup.position.set(cp.x, surfY + 0.03, cp.z);
       this.reticleGroup.rotation.y = this.yaw + this.carriedYawOffset;
       const heightGap = Math.max(0, cp.y - this.carriedCargo.halfExtents.y - surfY);
-      this.reticleRingMat.color.setHex(heightGap < 0.25 ? 0x42c97a : 0xf5b726);
+      this.reticleRingMat.color.setHex(heightGap < 0.25 ? 0x44ccdd : 0xffaa22);
     } else {
       this.reticleGroup.visible = false;
     }

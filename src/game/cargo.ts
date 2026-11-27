@@ -58,16 +58,17 @@ export function createCargoItem(
   group.position.copy(spawnPos);
 
   const palletH = 0.16;
-  const woodMat = new THREE.MeshStandardMaterial({
-    color: 0xa67442,
-    roughness: 0.88,
+  const palletMat = new THREE.MeshStandardMaterial({
+    color: 0x222c38,
+    roughness: 0.65,
+    metalness: 0.35,
     flatShading: true,
   });
 
   // Pallet top deck
   const palletTop = new THREE.Mesh(
     new THREE.BoxGeometry(halfW * 2, 0.06, halfD * 2),
-    woodMat,
+    palletMat,
   );
   palletTop.position.y = -halfH + palletH - 0.03;
   palletTop.castShadow = true;
@@ -78,7 +79,7 @@ export function createCargoItem(
   for (const offset of [-halfW + 0.09, 0, halfW - 0.09]) {
     const runner = new THREE.Mesh(
       new THREE.BoxGeometry(0.14, palletH - 0.06, halfD * 2 - 0.04),
-      woodMat,
+      palletMat,
     );
     runner.position.set(offset, -halfH + (palletH - 0.06) / 2, 0);
     runner.castShadow = true;

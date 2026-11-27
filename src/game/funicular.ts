@@ -61,19 +61,30 @@ export class FunicularSystem {
   constructor(world: RAPIER.World, scene: THREE.Scene) {
     const hazardTex = createHazardStripeTexture();
 
-    this.carA = this.createCar('A', 0xc93b32, 0xf7eed8, world, scene, hazardTex);
-    this.carB = this.createCar('B', 0x2d6fb8, 0xf7eed8, world, scene, hazardTex);
+    this.carA = this.createCar('A', 0x1a2840, 0x44ccdd, world, scene, hazardTex);
+    this.carB = this.createCar('B', 0x3a1a28, 0xcc44aa, world, scene, hazardTex);
 
     // Upper bullwheel pulley in cable house
     const wheelMat = new THREE.MeshStandardMaterial({
-      color: 0xd9a126,
-      metalness: 0.55,
-      roughness: 0.35,
+      color: 0x262d36,
+      metalness: 0.65,
+      roughness: 0.3,
     });
     this.bullwheel = new THREE.Mesh(new THREE.CylinderGeometry(2.8, 2.8, 0.35, 20), wheelMat);
     this.bullwheel.position.set(0, STATION_Y.upper + 0.6, -10.8);
     this.bullwheel.castShadow = true;
     scene.add(this.bullwheel);
+
+    // Glowing rim ring on bullwheel
+    const rimMat = new THREE.MeshStandardMaterial({
+      color: 0x44ccdd,
+      emissive: 0x22aacc,
+      emissiveIntensity: 0.6,
+    });
+    const rimGeo = new THREE.TorusGeometry(2.8, 0.06, 8, 32);
+    const rim = new THREE.Mesh(rimGeo, rimMat);
+    rim.position.set(0, STATION_Y.upper + 0.6, -10.8);
+    scene.add(rim);
 
     // Steel haul cables connecting cars to upper bullwheel
     const cableMat = new THREE.LineBasicMaterial({ color: 0x222830 });
@@ -183,13 +194,14 @@ export class FunicularSystem {
     const group = new THREE.Group();
     group.position.copy(pos);
 
-    const deckMat = new THREE.MeshStandardMaterial({ color: 0x454d58, roughness: 0.78 });
+    const deckMat = new THREE.MeshStandardMaterial({ color: 0x1e2834, roughness: 0.55, metalness: 0.45 });
     const bodyMat = new THREE.MeshStandardMaterial({
       color: primaryHex,
-      roughness: 0.45,
+      roughness: 0.38,
+      metalness: 0.55,
       flatShading: true,
     });
-    const trimMat = new THREE.MeshStandardMaterial({ color: trimHex, roughness: 0.5 });
+    const trimMat = new THREE.MeshStandardMaterial({ color: trimHex, emissive: trimHex, emissiveIntensity: 0.15, roughness: 0.25 });
     const metalMat = new THREE.MeshStandardMaterial({
       color: 0x262d36,
       metalness: 0.5,
@@ -247,8 +259,8 @@ export class FunicularSystem {
 
     // Small open-air conductor canopy post + signal lamp on outer side
     const lampMat = new THREE.MeshStandardMaterial({
-      color: 0x42c97a,
-      emissive: 0x168042,
+      color: 0x44ccdd,
+      emissive: 0x22aacc,
       emissiveIntensity: 0.9,
     });
     const lampPost = new THREE.Mesh(new THREE.BoxGeometry(0.14, 1.4, 0.14), metalMat);
@@ -578,14 +590,14 @@ export class FunicularSystem {
     this.archSignMat.map = createSignTexture(
       `DIFF ${diff}T / MAX ${this.deltaMax}T`,
       `A:${mA}T  |  B:${mB}T`,
-      balanced ? '#172821' : '#351717',
-      balanced ? '#42c97a' : '#ff6b63',
+      balanced ? '#0e2018' : '#351717',
+      balanced ? '#44ccdd' : '#ff4444',
     );
     this.archSignMat.needsUpdate = true;
     oldMap?.dispose();
 
-    const lampHex = balanced ? 0x42c97a : 0xe04f47;
-    const emissiveHex = balanced ? 0x168042 : 0x991f1a;
+    const lampHex = balanced ? 0x44ccdd : 0xff4444;
+    const emissiveHex = balanced ? 0x22aacc : 0x991f1a;
     for (const car of [this.carA, this.carB]) {
       car.lampMat.color.setHex(lampHex);
       car.lampMat.emissive.setHex(emissiveHex);
